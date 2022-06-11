@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AuditEntry" representedClassName="AuditEntry" syncable="YES">
+        <attribute name="oldValue" attributeType="String"/>
+        <attribute name="timeStamp" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="typeInt" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="typeInt|enumType" value="AuditActionType"/>
+            </userInfo>
+        </attribute>
+        <attribute name="updatedValue" attributeType="String"/>
+        <relationship name="field" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EntityField" inverseName="auditEntries" inverseEntity="EntityField"/>
+        <relationship name="identity" maxCount="1" deletionRule="Nullify" destinationEntity="RecordIdentity" inverseName="auditEntries" inverseEntity="RecordIdentity"/>
+        <relationship name="table" maxCount="1" deletionRule="Nullify" destinationEntity="EntityTable" inverseName="auditEntries" inverseEntity="EntityTable"/>
+    </entity>
+    <entity name="EntityField" representedClassName="EntityField" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="auditEntries" toMany="YES" deletionRule="Nullify" destinationEntity="AuditEntry" inverseName="field" inverseEntity="AuditEntry"/>
+        <relationship name="table" maxCount="1" deletionRule="Nullify" destinationEntity="EntityTable" inverseName="fields" inverseEntity="EntityTable"/>
+    </entity>
+    <entity name="EntityTable" representedClassName="EntityTable" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="auditEntries" toMany="YES" deletionRule="Nullify" destinationEntity="AuditEntry" inverseName="table" inverseEntity="AuditEntry"/>
+        <relationship name="fields" toMany="YES" deletionRule="Nullify" destinationEntity="EntityField" inverseName="table" inverseEntity="EntityField"/>
+    </entity>
+    <entity name="RecordIdentity" representedClassName="RecordIdentity" syncable="YES">
+        <attribute name="objectUUID" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="semanticName" attributeType="String"/>
+        <relationship name="auditEntries" toMany="YES" deletionRule="Nullify" destinationEntity="AuditEntry" inverseName="identity" inverseEntity="AuditEntry"/>
+    </entity>
+    <elements>
+        <element name="AuditEntry" positionX="-63" positionY="-18" width="128" height="134"/>
+        <element name="EntityField" positionX="-36" positionY="27" width="128" height="74"/>
+        <element name="EntityTable" positionX="-54" positionY="-9" width="128" height="74"/>
+        <element name="RecordIdentity" positionX="-18" positionY="72" width="128" height="74"/>
+    </elements>
+</model>
