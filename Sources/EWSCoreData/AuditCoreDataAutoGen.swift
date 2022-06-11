@@ -48,7 +48,7 @@ public class AuditEntry: NSManagedObject, EntityNameable {
 }
 
 extension AuditEntry: DependencyCheckable {
-    func checkDependencies() -> String? {
+    public func checkDependencies() -> String? {
         var dependencies = [String]()
         if field != nil {
             dependencies.append("Attached EntityField")
@@ -91,7 +91,7 @@ public class EntityField: NSManagedObject, EntityNameable {
 }
 
 extension EntityField: DependencyCheckable {
-    func checkDependencies() -> String? {
+    public func checkDependencies() -> String? {
         var dependencies = [String]()
         if !auditEntries.isEmpty {
             dependencies.append("\(auditEntries.count) AuditEntrys")
@@ -137,7 +137,7 @@ public class EntityTable: NSManagedObject, EntityNameable {
 }
 
 extension EntityTable: DependencyCheckable {
-    func checkDependencies() -> String? {
+    public func checkDependencies() -> String? {
         var dependencies = [String]()
         if !auditEntries.isEmpty {
             dependencies.append("\(auditEntries.count) AuditEntrys")
@@ -183,7 +183,7 @@ public class RecordIdentity: NSManagedObject, EntityNameable {
 }
 
 extension RecordIdentity: DependencyCheckable {
-    func checkDependencies() -> String? {
+    public func checkDependencies() -> String? {
         var dependencies = [String]()
         if !auditEntries.isEmpty {
             dependencies.append("\(auditEntries.count) AuditEntrys")

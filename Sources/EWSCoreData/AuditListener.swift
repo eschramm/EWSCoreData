@@ -17,7 +17,7 @@ fileprivate class AuditListenerSingleton {
 }
 
 public protocol CoreDataAuditable: NSManagedObject {
-    //var uuid: UUID { get }
+    var uuid: UUID { get }
     func semanticName() -> String
 }
 
@@ -29,7 +29,7 @@ public enum CoreDataAuditError: Error {
     case other(String)
 }
 
-enum AuditActionType: Int {
+public enum AuditActionType: Int {
     case created
     case modified
     case deleted
@@ -138,7 +138,7 @@ fileprivate class AuditListenerCache {
     }
 }
 
-extension AuditEntry {
+public extension AuditEntry {
     class func entry(type: AuditActionType, tableName: String, objectUUID: UUID, semanticName: String, fieldName: String, oldValue: Any, updatedValue: Any, timeStamp: Date = Date(), context: NSManagedObjectContext?) {
         guard let listener = AuditListenerSingleton.shared.auditListener else { return }
         listener.auditContext.performAndWait {
@@ -164,7 +164,7 @@ public class AuditListener {
         let objectUUID: UUID
     }
     
-    enum ChangeKey {
+    public enum ChangeKey {
         case wildCard(String)
         case exact(String)
         
@@ -201,19 +201,19 @@ public class AuditListener {
     
     static var ignoreChangeKeys = Set<String>()
     
-    init(auditContext: NSManagedObjectContext, errorHandler: @escaping (Error) -> ()) throws {
+    public init(auditContext: NSManagedObjectContext, errorHandler: @escaping (Error) -> ()) throws {
         self.auditContext = auditContext
         self.providedErrorHandler = errorHandler
         self.cache = try AuditListenerCache(auditContext: auditContext)
     }
     
-    func register(entityName: String, ignoreKeys: [ChangeKey]) {
+    public func register(entityName: String, ignoreKeys: [ChangeKey]) {
         auditContext.performAndWait {
             Self.ignoreChangeKeys = Self.ignoreChangeKeys.union(ignoreKeys.map({ "\(entityName)-\($0.output)" }))
         }
     }
     
-    func start() {
+    public func start() {
         errorHandler = providedErrorHandler
         AuditListenerSingleton.shared.auditListener = self
         subscribeToChangedNotification()
@@ -391,7 +391,7 @@ public class AuditListener {
         }
     }
 
-    func stop() {
+    public func stop() {
         auditContext.performAndWait {
             NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: nil)
             NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextDidSave, object: nil)
@@ -404,12 +404,12 @@ public class AuditListener {
     }
 }
 
-class ALPersistentContainer: NSPersistentContainer {
+public class ALPersistentContainer: NSPersistentContainer {
     
     static var testing: Bool = false
     static var baseURL: URL = URL(fileURLWithPath: "/dev/null")  // URL(fileURLWithPath: "/Users/\(userName)/Sync/Apps/DailyFinances/")
 
-    static func container(baseURL: URL, testing: Bool = false) -> ALPersistentContainer {
+    public static func container(baseURL: URL, testing: Bool = false) -> ALPersistentContainer {
         Self.testing = testing
         Self.baseURL = baseURL
         /*
@@ -419,7 +419,9 @@ class ALPersistentContainer: NSPersistentContainer {
          error conditions that could cause the creation of the store to fail.
          */
         
-        let container = ALPersistentContainer(name: "AuditModel")
+        let modelURL = Bundle.module.url(forResource: "AuditModel", withExtension: "momd")!
+        let model = NSManagedObjectModel(contentsOf: modelURL)!
+        let container = ALPersistentContainer(name: "AuditModel", managedObjectModel: model)
         
         if testing {
             // in-memory store
@@ -454,7 +456,7 @@ class ALPersistentContainer: NSPersistentContainer {
         return container
     }
     
-    static override func defaultDirectoryURL() -> URL {
+    public static override func defaultDirectoryURL() -> URL {
         return Self.baseURL
     }
     

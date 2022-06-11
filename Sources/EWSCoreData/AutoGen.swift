@@ -7,26 +7,26 @@
 
 import CoreData
 
-protocol EntityNameable: NSManagedObject {
+public protocol EntityNameable: NSManagedObject {
     static func entityName() -> String
 }
 
-extension EntityNameable {
+public extension EntityNameable {
     static func entityName() -> String {
         return Self.entity().name!
     }
 }
 
-protocol DependencyCheckable {
+public protocol DependencyCheckable {
     func checkDependencies() -> String?
 }
 
-enum ESCoreDataError : Error {
+public enum ESCoreDataError : Error {
     case noRecordFoundForUUID(UUID)
     case moreThanOneRecordFoundWithUUID(UUID)
 }
 
-extension NSSet {
+public extension NSSet {
     var isEmpty: Bool {
         return (count == 0)
     }

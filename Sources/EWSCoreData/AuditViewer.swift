@@ -8,17 +8,17 @@
 
 import SwiftUI
 
-extension AuditEntry : Identifiable {
-    
-}
+extension AuditEntry : Identifiable { }
 
-struct AuditViewer: View {
+public struct AuditViewer: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(entity: AuditEntry.entity(), sortDescriptors: [NSSortDescriptor(key: "timeStamp", ascending: false)])
     var modifications: FetchedResults<AuditEntry>
     
-    var body: some View {
+    public init() { }
+    
+    public var body: some View {
         Table(modifications) {
             TableColumn("Date") { modification in
                 Text(modification.timeStamp.formatted(date: .numeric, time: .standard))
