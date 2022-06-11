@@ -123,7 +123,7 @@ public class OTDateComboBoxDataSourceAndDelegate<T : OvertimeRecord> : NSObject,
         }
     }
     
-    func formattedOTStartDate(otRecord: T, omitTime: Bool = false) -> String {
+    public func formattedOTStartDate(otRecord: T, omitTime: Bool = false) -> String {
         if otRecord.otStartDate > Date.distantPast {
             return omitTime ? otRecord.otStartDate.formatted(date: .numeric, time: .omitted) : dateFormatter.string(from: otRecord.otStartDate)
         } else {
