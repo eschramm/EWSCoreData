@@ -341,7 +341,15 @@ public class AuditListener {
                             updatedValueString = managedObjects.filter({ $0 is CoreDataAuditable }).map({ ($0 as! CoreDataAuditable).semanticName() }).joined(separator: ";")
                         } else {
                             if let updatedValue = updatedValue {
-                                updatedValueString = "\(updatedValue)"
+                                // to account for Floating number false positives
+                                if let updatedFloat = updatedValue as? Double,
+                                    let oldFloat = Double(oldValueString),
+                                    abs(updatedFloat - oldFloat) / oldFloat < 0.00001
+                                {
+                                    updatedValueString = oldValueString
+                                } else {
+                                    updatedValueString = "\(updatedValue)"
+                                }
                             } else {
                                 updatedValueString = "<null>"
                             }
